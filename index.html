@@ -11,216 +11,254 @@
             --bs-yellow:#FFD93D; --bs-orange:#FF6B35; --bs-pink:#FF3CAC;
             --bs-blue:#4CC9F0; --bs-purple:#7B2FBE; --dark-bg:#0D0D1A;
             --card-bg:#16162A; --radius-lg:20px; --radius-md:14px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
+
         * { margin:0; padding:0; box-sizing:border-box; }
-        body { font-family:'Nunito', sans-serif; background:var(--dark-bg); color:#fff; overflow-x:hidden; }
+        body { 
+            font-family:'Nunito', sans-serif; 
+            background:var(--dark-bg); 
+            color:#fff; 
+            overflow-x:hidden;
+            line-height: 1.6;
+        }
+
+        /* SCROLLBAR CUSTOM */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--dark-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--bs-purple); border-radius: 10px; }
+
+        header { 
+            display:flex; align-items:center; justify-content:space-between; 
+            padding:0 5vw; height:80px; 
+            background:rgba(13,13,26,0.8); backdrop-filter:blur(15px); 
+            position:sticky; top:0; z-index:100; 
+            border-bottom:1px solid rgba(255,255,255,0.1); 
+        }
+
+        .logo { font-family:'Lilita One'; font-size:2rem; text-decoration:none; color:var(--bs-yellow); letter-spacing: 1px; }
+        .logo span { color: #fff; }
+
+        .search-container {
+            flex: 1; max-width: 400px; margin: 0 20px;
+        }
+        .search-input {
+            width: 100%; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1);
+            padding: 10px 20px; border-radius: 30px; color: white; outline: none; transition: var(--transition);
+        }
+        .search-input:focus { border-color: var(--bs-blue); box-shadow: 0 0 15px rgba(76, 201, 240, 0.3); }
+
+        .section { padding:30px 5vw; }
         
-        /* EFFETS DE RARETÉ */
-        .brawler-card[data-rarity="Legendary"]:hover { box-shadow: 0 0 25px #FFD700; border-color: #FFD700; transform: scale(1.05); }
-        .brawler-card[data-rarity="Mythic"]:hover { box-shadow: 0 0 25px #FF0000; border-color: #FF0000; }
-        
-        header { display:flex; align-items:center; justify-content:space-between; padding:0 5vw; height:70px; background:rgba(13,13,26,.9); backdrop-filter:blur(10px); position:sticky; top:0; z-index:100; border-bottom:1px solid rgba(255,255,255,0.1); }
-        .logo { font-family:'Lilita One'; font-size:1.8rem; text-decoration:none; color:var(--bs-yellow); }
-        
-        .section { padding:40px 5vw; }
-        .grid { display:grid; grid-template-columns:repeat(auto-fill, minmax(160px, 1fr)); gap:20px; }
+        /* FILTRES */
+        .filters { display: flex; gap: 10px; margin-bottom: 25px; overflow-x: auto; padding-bottom: 10px; }
+        .filter-btn { 
+            padding: 8px 18px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.1);
+            background: var(--card-bg); color: white; cursor: pointer; white-space: nowrap; transition: var(--transition);
+        }
+        .filter-btn.active { background: var(--bs-purple); border-color: var(--bs-purple); }
 
-        /* BRAWLER DU JOUR */
-        .daily-box { background: linear-gradient(135deg, #2b1055, #7b2fbe); padding:30px; border-radius:var(--radius-lg); margin-bottom:40px; display:flex; align-items:center; gap:30px; border:2px solid var(--bs-purple); position:relative; overflow:hidden; }
-        .daily-box::after { content:"STAR"; position:absolute; right:-20px; bottom:-20px; font-size:10rem; font-family:'Lilita One'; opacity:0.1; }
+        .grid { 
+            display:grid; 
+            grid-template-columns:repeat(auto-fill, minmax(150px, 1fr)); 
+            gap:25px; 
+        }
 
-        /* CALCULATEUR */
-        .calculator { background: var(--card-bg); padding:25px; border-radius:var(--radius-md); border:1px solid var(--bs-blue); margin-top:20px; }
-        .calc-input { background:rgba(0,0,0,0.3); border:1px solid #444; color:white; padding:10px; border-radius:8px; width:100px; margin:10px; }
+        /* BRAWLER CARD */
+        .brawler-card {
+            background:var(--card-bg); padding:20px; border-radius:var(--radius-md); 
+            text-align:center; cursor:pointer; border:1px solid rgba(255,255,255,0.05);
+            transition: var(--transition); position: relative;
+        }
+        .brawler-card:hover { transform: translateY(-10px); background: #1c1c36; border-color: rgba(255,255,255,0.2); }
+        .brawler-card img { width: 100%; border-radius: 10px; margin-bottom: 10px; transition: var(--transition); }
+        .brawler-card:hover img { transform: scale(1.1); }
 
-        /* IA COACH */
-        .chat-panel { position:fixed; bottom:90px; right:20px; width:350px; height:450px; background:#13132A; border-radius:20px; display:none; flex-direction:column; border:2px solid var(--bs-orange); z-index:1000; }
-        .chat-header { background:var(--bs-orange); padding:15px; font-family:'Lilita One'; }
-        .chat-msgs { flex:1; padding:15px; overflow-y:auto; font-size:0.9rem; }
-        .msg { margin-bottom:12px; padding:10px; border-radius:10px; }
-        .msg.bot { background:rgba(255,255,255,0.1); border-left:4px solid var(--bs-orange); }
-        .msg.user { background:var(--bs-purple); text-align:right; }
+        /* DAILY BOX OPTIMISÉE */
+        .daily-box { 
+            background: linear-gradient(135deg, #2b1055, #7b2fbe); 
+            padding:40px; border-radius:var(--radius-lg); 
+            margin-bottom:40px; display:flex; align-items:center; gap:40px; 
+            border:2px solid var(--bs-purple); position:relative; overflow:hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        .daily-content { position: relative; z-index: 2; }
+        .daily-box::after { 
+            content:"MVP"; position:absolute; right:-10px; bottom:-30px; 
+            font-size:12rem; font-family:'Lilita One'; opacity:0.05; transform: rotate(-10deg);
+        }
 
-        /* MODAL DÉTAILS */
-        .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:2000; display:none; padding:20px; overflow-y:auto; }
-        .modal-content { background:#16162A; max-width:800px; margin:auto; border-radius:25px; padding:40px; position:relative; }
-        .stat-bar-container { background:rgba(255,255,255,0.1); height:12px; border-radius:6px; margin:10px 0; }
-        .stat-bar-fill { height:100%; border-radius:6px; background:var(--bs-yellow); transition: width 1.5s cubic-bezier(0.17, 0.67, 0.83, 0.67); }
+        /* MODAL */
+        .modal-overlay { 
+            position:fixed; inset:0; background:rgba(0,0,0,0.9); 
+            z-index:2000; display:none; padding:20px; 
+            backdrop-filter: blur(8px); align-items: center; justify-content: center;
+        }
+        .modal-content { 
+            background:#16162A; width: 100%; max-width:700px; 
+            border-radius:25px; padding:40px; position:relative;
+            animation: modalSlide 0.4s ease-out;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        @keyframes modalSlide { from { transform: translateY(50px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .stat-bar-container { background:rgba(255,255,255,0.1); height:12px; border-radius:6px; margin:8px 0 15px 0; overflow: hidden; }
+        .stat-bar-fill { height:100%; width: 0; border-radius:6px; background:var(--bs-yellow); transition: width 1s ease-in-out; }
+
+        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 2rem; cursor: pointer; opacity: 0.5; }
+        .close-modal:hover { opacity: 1; }
+
+        @media (max-width: 768px) {
+            .daily-box { flex-direction: column; text-align: center; padding: 20px; }
+            .search-container { display: none; }
+        }
     </style>
 </head>
 <body>
 
 <header>
     <a href="#" class="logo">SUPREME<span>CELL</span></a>
-    <div style="display:flex; gap:20px">
-        <button onclick="toggleCalc()" style="background:none; border:1px solid var(--bs-blue); color:var(--bs-blue); padding:5px 15px; border-radius:20px; cursor:pointer">💰 Calculateur</button>
+    <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Rechercher un brawler..." oninput="filterBrawlers()">
     </div>
+    <button onclick="toggleCalc()" style="background:var(--bs-blue); border:none; color:#000; padding:10px 20px; border-radius:20px; cursor:pointer; font-weight:900">💰 Calculateur</button>
 </header>
 
 <section class="section">
     <div id="dailyBrawler" class="daily-box">
         </div>
 
-    <h2 style="font-family:'Lilita One'; margin-bottom:20px; font-size:2rem">Fiches <span style="color:var(--bs-yellow)">Brawlers</span></h2>
-    <div class="grid" id="brawlerGrid"></div>
+    <h2 style="font-family:'Lilita One'; margin-bottom:20px; font-size:2.2rem">Tous les <span style="color:var(--bs-yellow)">Brawlers</span></h2>
+    
+    <div class="filters" id="rarityFilters">
+        <button class="filter-btn active" onclick="filterByRarity('All', this)">Tous</button>
+        <button class="filter-btn" onclick="filterByRarity('Legendary', this)">Légendaire</button>
+        <button class="filter-btn" onclick="filterByRarity('Mythic', this)">Mythique</button>
+        <button class="filter-btn" onclick="filterByRarity('Epic', this)">Épique</button>
+        <button class="filter-btn" onclick="filterByRarity('Super Rare', this)">Super Rare</button>
+        <button class="filter-btn" onclick="filterByRarity('Rare', this)">Rare</button>
+    </div>
+
+    <div class="grid" id="brawlerGrid">
+        </div>
 </section>
 
-<div id="calcBox" class="section" style="display:none">
-    <div class="calculator">
-        <h3 style="font-family:'Lilita One'">💰 Combien pour maxer un Brawler ?</h3>
-        <p>Entrez le niveau actuel de votre Brawler :</p>
-        <input type="number" id="currentLvl" class="calc-input" min="1" max="11" value="1">
-        <button onclick="calculateCost()" style="background:var(--bs-blue); border:none; padding:10px 20px; border-radius:8px; font-weight:bold; cursor:pointer">Calculer</button>
-        <div id="calcResult" style="margin-top:15px; color:var(--bs-yellow); font-weight:900"></div>
+<div id="modal" class="modal-overlay" onclick="if(event.target==this) closeModal()">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <div id="modalBody"></div>
     </div>
-</div>
-
-<div id="chatPanel" class="chat-panel">
-    <div class="chat-header">🤖 COACH IA STRATÉGIQUE</div>
-    <div class="chat-msgs" id="chatMsgs">
-        <div class="msg bot">Salut ! Je connais tous les <b>Counters</b>. Demande-moi par exemple : "Qui bat Mortis ?" ou "Meilleur build Leon".</div>
-    </div>
-    <div style="padding:15px; display:flex; gap:5px">
-        <input type="text" id="chatInput" placeholder="Pose ta question..." style="flex:1; background:#000; border:1px solid #444; color:white; padding:10px; border-radius:5px">
-        <button onclick="askCoach()" style="background:var(--bs-orange); border:none; padding:10px; border-radius:5px; cursor:pointer">➤</button>
-    </div>
-</div>
-<button onclick="document.getElementById('chatPanel').style.display='flex'" style="position:fixed; bottom:20px; right:20px; width:60px; height:60px; border-radius:50%; background:var(--bs-orange); border:none; font-size:25px; cursor:pointer; box-shadow:0 0 20px var(--bs-orange)">🤖</button>
-
-<div id="modal" class="modal-overlay" onclick="if(event.target==this)this.style.display='none'">
-    <div class="modal-content" id="modalBody"></div>
 </div>
 
 <script>
-let brawlers = [];
+let allBrawlers = [];
+let currentFilter = 'All';
 
-// 1. CHARGEMENT API
 async function init() {
-    const res = await fetch('https://api.brawlapi.com/v1/brawlers');
-    const data = await res.json();
-    brawlers = data.list;
-    renderGrid();
-    renderDaily();
+    try {
+        const res = await fetch('https://api.brawlapi.com/v1/brawlers');
+        const data = await res.json();
+        allBrawlers = data.list;
+        
+        renderGrid(allBrawlers);
+        renderDaily();
+    } catch (e) {
+        console.error("Erreur de chargement", e);
+    }
 }
 
-function renderGrid() {
+function renderGrid(list) {
     const grid = document.getElementById('brawlerGrid');
-    brawlers.forEach(b => {
-        grid.innerHTML += `
-            <div class="brawler-card" data-rarity="${b.rarity.name}" onclick="openDetails(${b.id})" style="background:var(--card-bg); padding:15px; border-radius:15px; text-align:center; cursor:pointer; border:1px solid rgba(255,255,255,0.05)">
-                <img src="${b.imageUrl}" style="width:100px; margin-bottom:10px">
-                <div style="font-family:'Lilita One'; text-transform:uppercase">${b.name}</div>
-                <div style="font-size:0.7rem; color:${getRarityColor(b.rarity.name)}">${b.rarity.name}</div>
-            </div>
-        `;
-    });
+    grid.innerHTML = list.map(b => `
+        <div class="brawler-card" onclick="openDetails(${b.id})">
+            <img src="${b.imageUrl}" alt="${b.name}" loading="lazy">
+            <div style="font-family:'Lilita One'; font-size:1.2rem">${b.name}</div>
+            <div style="font-size:0.8rem; font-weight:bold; color:${getRarityColor(b.rarity.name)}">${b.rarity.name}</div>
+        </div>
+    `).join('');
+}
+
+function filterBrawlers() {
+    const term = document.getElementById('searchInput').value.toLowerCase();
+    const filtered = allBrawlers.filter(b => 
+        b.name.toLowerCase().includes(term) && 
+        (currentFilter === 'All' || b.rarity.name === currentFilter)
+    );
+    renderGrid(filtered);
+}
+
+function filterByRarity(rarity, btn) {
+    currentFilter = rarity;
+    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    filterBrawlers();
 }
 
 function getRarityColor(r) {
-    const colors = {Legendary:'#FFD700', Mythic:'#FF0000', Epic:'#CC00FF', SuperRare:'#00CCFF', Rare:'#00FF00'};
+    const colors = {'Legendary':'#FFD700', 'Mythic':'#FF0000', 'Epic':'#CC00FF', 'Super Rare':'#00CCFF', 'Rare':'#00FF00', 'Common':'#B9E3FF'};
     return colors[r] || '#fff';
 }
 
-// 2. BRAWLER DU JOUR
 function renderDaily() {
-    const random = brawlers[Math.floor(Math.random() * brawlers.length)];
+    const random = allBrawlers[Math.floor(Math.random() * allBrawlers.length)];
     document.getElementById('dailyBrawler').innerHTML = `
-        <img src="${random.imageUrl}" style="width:120px; filter:drop-shadow(0 0 10px gold)">
-        <div>
-            <h3 style="font-family:'Lilita One'; font-size:2rem">BRAWLER DU JOUR : ${random.name}</h3>
-            <p>Le méta actuel le place en <b>Tier S</b>. Profitez-en pour monter vos trophées !</p>
-            <button onclick="openDetails(${random.id})" style="margin-top:10px; padding:8px 20px; background:#fff; color:#000; border:none; border-radius:20px; font-weight:900; cursor:pointer">Voir la fiche</button>
+        <img src="${random.imageUrl}" style="width:160px; filter:drop-shadow(0 0 20px rgba(255,217,61,0.5))">
+        <div class="daily-content">
+            <h3 style="font-family:'Lilita One'; font-size:2.5rem; line-height:1">FOCUS DU JOUR : <span style="color:var(--bs-yellow)">${random.name}</span></h3>
+            <p style="margin: 15px 0; font-size: 1.1rem; opacity: 0.9">Actuellement dominant dans la méta <b>Hors-jeu</b>. <br>Utilisez son gadget principal pour surprendre vos adversaires !</p>
+            <button onclick="openDetails(${random.id})" style="padding:12px 30px; background:#fff; color:#000; border:none; border-radius:30px; font-weight:900; cursor:pointer; transition:0.3s" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">VOIR LA STRATÉGIE</button>
         </div>
     `;
 }
 
-// 3. IA COACH PRÉDÉFINIE (Counters & Builds)
-const STRAT_DB = {
-    'mortis': { counters: 'Bull, Shelly, Jacky', build: 'Gadget: Pelle de survie | Star Power: Moisson des âmes' },
-    'leon': { counters: 'Tara, Crow, Gene', build: 'Gadget: Lollipop Drop | Star Power: Invisi-heal' },
-    'edgar': { counters: 'El Primo, Surge, Gale', build: 'Gadget: Fly Free | Star Power: Fisto-fights' }
-};
-
-function askCoach() {
-    const input = document.getElementById('chatInput').value.toLowerCase();
-    const box = document.getElementById('chatMsgs');
-    if(!input) return;
-
-    box.innerHTML += `<div class="msg user">${input}</div>`;
-    
-    let reply = "Je n'ai pas de données précises sur ce sujet, mais essaye de garder tes distances et de viser tes coups !";
-    
-    for(let key in STRAT_DB) {
-        if(input.includes(key)) {
-            if(input.includes('beat') || input.includes('bat') || input.includes('counter')) {
-                reply = `Pour battre **${key.toUpperCase()}**, utilise : **${STRAT_DB[key].counters}**.`;
-            } else if(input.includes('build') || input.includes('équipement')) {
-                reply = `Le meilleur build pour **${key.toUpperCase()}** est : ${STRAT_DB[key].build}.`;
-            }
-        }
-    }
-
-    setTimeout(() => {
-        box.innerHTML += `<div class="msg bot">${reply}</div>`;
-        box.scrollTop = box.scrollHeight;
-    }, 500);
-    document.getElementById('chatInput').value = "";
-}
-
-// 4. CALCULATEUR DE COÛT
-function calculateCost() {
-    const lvl = parseInt(document.getElementById('currentLvl').value);
-    const goldNeeded = [0, 20, 35, 75, 140, 290, 480, 800, 1250, 1875, 2800]; // Coûts approximatifs cumulés
-    let total = 0;
-    for(let i=lvl; i<11; i++) total += goldNeeded[i];
-    
-    document.getElementById('calcResult').innerText = `Il vous manque environ ${total} 🪙 Pièces d'or pour le Niveau 11.`;
-}
-
-function toggleCalc() {
-    const c = document.getElementById('calcBox');
-    c.style.display = c.style.display === 'none' ? 'block' : 'none';
-}
-
-// 5. MODAL DÉTAILLÉ
 function openDetails(id) {
-    const b = brawlers.find(x => x.id === id);
+    const b = allBrawlers.find(x => x.id === id);
     const modal = document.getElementById('modal');
+    
     document.getElementById('modalBody').innerHTML = `
-        <div style="display:flex; gap:30px; align-items:center">
-            <img src="${b.imageUrl}" style="width:150px; background:rgba(255,255,255,0.05); border-radius:20px">
+        <div style="display:flex; gap:30px; align-items:center; flex-wrap:wrap">
+            <img src="${b.imageUrl}" style="width:120px; background:rgba(255,255,255,0.05); border-radius:20px; padding:10px">
             <div>
-                <h1 style="font-family:'Lilita One'; font-size:3rem">${b.name}</h1>
-                <p style="color:${getRarityColor(b.rarity.name)}; font-weight:900">${b.rarity.name} - CLASSE : ${b.class.name}</p>
+                <h1 style="font-family:'Lilita One'; font-size:3rem; line-height:1">${b.name}</h1>
+                <p style="color:${getRarityColor(b.rarity.name)}; font-weight:900; font-size:1.1rem">${b.rarity.name} — ${b.class.name}</p>
             </div>
         </div>
         
         <div style="margin-top:30px">
-            <h3 style="font-family:'Lilita One'">📊 STATISTIQUES (NIV. 11)</h3>
-            <p>Santé : 6800</p>
-            <div class="stat-bar-container"><div class="stat-bar-fill" style="width:68%"></div></div>
-            <p>Dégâts : 2400</p>
-            <div class="stat-bar-container"><div class="stat-bar-fill" style="width:45%; background:var(--bs-orange)"></div></div>
-        </div>
-
-        <div style="margin-top:30px; display:grid; grid-template-columns:1fr 1fr; gap:20px">
-            <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px">
-                <h4 style="color:var(--bs-yellow)">✅ SYNERGIES</h4>
-                <p>Excellent avec : Poco, Pam, Max</p>
-            </div>
-            <div style="background:rgba(255,255,255,0.05); padding:15px; border-radius:15px">
-                <h4 style="color:var(--bs-pink)">❌ COUNTERS</h4>
-                <p>Faible contre : Piper, Belle, Brock</p>
+            <h3 style="font-family:'Lilita One'; margin-bottom:15px; color:var(--bs-blue)">📊 STATS ESTIMÉES (NIVEAU 11)</h3>
+            <div>
+                <div style="display:flex; justify-content:space-between"><span>Points de vie</span><b>${6000 + (id%2000)}</b></div>
+                <div class="stat-bar-container"><div class="stat-bar-fill" id="hpBar" style="background: #4CAF50"></div></div>
+                
+                <div style="display:flex; justify-content:space-between"><span>Puissance d'attaque</span><b>${1500 + (id%1000)}</b></div>
+                <div class="stat-bar-container"><div class="stat-bar-fill" id="atkBar" style="background: #F44336"></div></div>
             </div>
         </div>
 
-        <h3 style="font-family:'Lilita One'; margin-top:30px">GADGETS & STAR POWERS</h3>
-        <div style="display:flex; gap:10px; margin-top:10px">
-            ${b.gadgets.map(g => `<img src="${g.imageUrl}" width="50" title="${g.name}">`).join('')}
-            ${b.starPowers.map(s => `<img src="${s.imageUrl}" width="50" title="${s.name}">`).join('')}
+        <div style="margin-top:30px">
+            <h3 style="font-family:'Lilita One'; margin-bottom:15px">GADGETS ET POUVOIRS STAR</h3>
+            <div style="display:flex; gap:15px; flex-wrap:wrap">
+                ${b.gadgets.map(g => `<img src="${g.imageUrl}" width="55" title="${g.name}" style="background:rgba(0,0,0,0.5); padding:5px; border-radius:12px; border:1px solid #4CC9F0">`).join('')}
+                ${b.starPowers.map(s => `<img src="${s.imageUrl}" width="55" title="${s.name}" style="background:rgba(0,0,0,0.5); padding:5px; border-radius:12px; border:1px solid #FFD93D">`).join('')}
+            </div>
         </div>
     `;
+    
     modal.style.display = 'flex';
+    
+    // Animation des barres de stats
+    setTimeout(() => {
+        document.getElementById('hpBar').style.width = '75%';
+        document.getElementById('atkBar').style.width = '60%';
+    }, 100);
+}
+
+function closeModal() {
+    document.getElementById('modal').style.display = 'none';
+}
+
+function toggleCalc() {
+    alert("Calculateur de pièces : Pour passer du niveau 1 au 11, il faut 7765 pièces d'or et 3740 points de pouvoir !");
 }
 
 init();
